@@ -18,3 +18,24 @@ query<-"SELECT playerID,teamID,yearID,HR from Batting WHERE teamID='NYA' and yea
 sqldf(query)
 ```
 
+Let's find all instances where Yankee players have hit 40 or more homeruns in a season:
+
+```{r}
+query<-"SELECT playerID,teamID,yearID,HR from Batting WHERE teamID='NYA' and HR>=40"
+sqldf(query)
+```
+
+Now let's find all instances where a MLB player had over 40 homeruns but fewer than 60 strikeouts:
+
+```{r}
+query<-"SELECT playerID,teamID,yearID,HR,SO from Batting WHERE HR>40 and SO<60"
+sqldf(query)
+```
+
+Finally, let's find all the instances of Phillies players who hit more than 30 homeruns in a season in the 1970's:
+
+```{r}
+query<-"SELECT playerID,teamID,yearID,HR from Batting WHERE HR>30 and yearID>=1970 and yearID<=1979 and teamID='PHI'"
+sqldf(query)
+```
+
