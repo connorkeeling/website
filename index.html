@@ -240,7 +240,6 @@ sqldf(query)</code></pre>
 <pre class="r"><code>query&lt;-&quot;SELECT playerID,yearID,teamID,HR FROM Batting WHERE
 HR&gt;50
 ORDER BY HR DESC&quot;
-
 sqldf(query)</code></pre>
 <pre><code>##     playerID yearID teamID HR
 ## 1  bondsba01   2001    SFN 73
@@ -279,6 +278,50 @@ sqldf(query)</code></pre>
 ## 34  mayswi01   1955    NY1 51
 ## 35 fieldce01   1990    DET 51
 ## 36 jonesan01   2005    ATL 51</code></pre>
+</div>
+<div id="aggregation" class="section level2">
+<h2>AGGREGATION</h2>
+<p>We can also squash figures together using aggregation. Say we want to find the career total homeruns for Babe Ruth. Rather than adding the HR totals from each individual season, we can do this:</p>
+<pre class="r"><code>query&lt;-&quot;SELECT playerID,sum(HR) FROM Batting WHERE playerID='ruthba01'
+GROUP BY playerID&quot;
+sqldf(query)</code></pre>
+<pre><code>##   playerID sum(HR)
+## 1 ruthba01     714</code></pre>
+<p>Let’s say we want to find the career homerun totals for all baseball players, but that we only want to list those with 600 or more HR.</p>
+<pre class="r"><code>query&lt;-&quot;SELECT playerID,sum(HR) FROM Batting
+GROUP BY playerID
+HAVING sum(HR)&gt;=600
+ORDER BY sum(HR) DESC&quot;
+sqldf(query)</code></pre>
+<pre><code>##    playerID sum(HR)
+## 1 bondsba01     762
+## 2 aaronha01     755
+## 3  ruthba01     714
+## 4 rodrial01     696
+## 5  mayswi01     660
+## 6 griffke02     630
+## 7 thomeji01     612
+## 8  sosasa01     609</code></pre>
+<p>We can use this method to find the average totals of homeruns, as well. Let’s find out which players have the highest per-season HR averages.</p>
+<pre class="r"><code>query&lt;-&quot;SELECT playerID,avg(HR) FROM Batting 
+GROUP BY playerID
+HAVING avg(HR)&gt;30
+ORDER BY avg(HR) DESC&quot;
+sqldf(query)</code></pre>
+<pre><code>##     playerID  avg(HR)
+## 1  pujolal01 36.93750
+## 2  bondsba01 34.63636
+## 3  mcgwima01 34.29412
+## 4  kinerra01 33.54545
+## 5  aaronha01 32.82609
+## 6  bryankr01 32.50000
+## 7   ruthba01 32.45455
+## 8   sosasa01 32.05263
+## 9  cabremi01 31.85714
+## 10 belleal01 31.75000
+## 11 rodrial01 31.63636
+## 12 schmimi01 30.44444
+## 13 abreujo02 30.33333</code></pre>
 </div>
 
 

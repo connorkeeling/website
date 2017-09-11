@@ -47,7 +47,38 @@ With SQL we can also order the rows in the output. For example, suppose you want
 query<-"SELECT playerID,yearID,teamID,HR FROM Batting WHERE
 HR>50
 ORDER BY HR DESC"
-
 sqldf(query)
+```
+
+## AGGREGATION
+
+We can also squash figures together using aggregation.  Say we want to find the career total homeruns for Babe Ruth. Rather than adding the HR totals from each individual season, we can do this:
+
+```{r}
+query<-"SELECT playerID,sum(HR) FROM Batting WHERE playerID='ruthba01'
+GROUP BY playerID"
+sqldf(query)
+```
+
+Let's say we want to find the career homerun totals for all baseball players, but that we only want to list those with 600 or more HR.
+
+```{r}
+query<-"SELECT playerID,sum(HR) FROM Batting
+GROUP BY playerID
+HAVING sum(HR)>=600
+ORDER BY sum(HR) DESC"
+sqldf(query)
+
+```
+
+We can use this method to find the average totals of homeruns, as well. Let's find out which players have the highest per-season HR averages.
+
+```{r}
+query<-"SELECT playerID,avg(HR) FROM Batting 
+GROUP BY playerID
+HAVING avg(HR)>30
+ORDER BY avg(HR) DESC"
+sqldf(query)
+
 ```
 
