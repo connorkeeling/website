@@ -82,3 +82,39 @@ sqldf(query)
 
 ```
 
+## JOINS
+
+We can inner join the data to fully list the information.  Let's say we want to list Babe Ruth's full name along with his per-season homerun totals:
+
+```{r}
+query<-"SELECT nameFirst,nameLast,yearID,teamID,HR
+FROM Batting INNER JOIN Master
+ON Batting.playerID=Master.playerID
+WHERE Batting.playerID='ruthba01'"
+
+sqldf(query)
+```
+
+Now let's find all instances of players with over 50 homeruns in a season while listing first and last names, year, team name, and number of homeruns:
+
+```{r}
+query<-"SELECT nameFirst,nameLast,teamID,yearID,HR
+FROM Batting INNER JOIN Master
+ON Batting.playerID=Master.playerID
+WHERE HR>50
+ORDER BY HR DESC"
+
+sqldf(query)
+```
+
+Lastly, let's list Babe Ruth with his playerID, yearID, team name, and number of homeruns:
+
+```{r}
+query<-"SELECT playerID,name,Batting.yearID,Batting.HR
+FROM Batting INNER JOIN Teams
+ON Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
+WHERE playerID='ruthba01'"
+
+sqldf(query)
+```
+
