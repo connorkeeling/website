@@ -1,5 +1,5 @@
 ---
-title: "SQL"
+title: "SQL by Connor Keeling"
 output: html_document
 ---
 ## Filtering Rows and Columns
@@ -106,14 +106,52 @@ ORDER BY HR DESC"
 
 sqldf(query)
 ```
-
-Lastly, let's list Babe Ruth with his playerID, yearID, team name, and number of homeruns:
+Next, let's list Babe Ruth with his playerID, yearID, team name, and number of homeruns:
 
 ```{r}
 query<-"SELECT playerID,name,Batting.yearID,Batting.HR
 FROM Batting INNER JOIN Teams
 ON Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
 WHERE playerID='ruthba01'"
+
+sqldf(query)
+```
+
+Next, let's list Babe Ruth again
+```{r}
+colnames(Master)
+query<-"SELECT nameFirst,nameLast,name,Batting.yearID,Batting.HR
+FROM (Batting INNER JOIN Master
+ON Batting.playerID=Master.playerID) INNER JOIN Teams
+ON Batting.teamID=Teams.teamID AND Batting.yearID=Teams.yearID
+WHERE Batting.playerID='ruthba01'"
+
+sqldf(query)
+```
+
+Let's find carer homerun totals for players but limit the display to those with 600 or more homeruns and list them from most to fewest homeruns:
+
+```{r}
+query<-"SELECT nameFirst,nameLast,sum(HR)
+FROM Batting INNER JOIN Master
+ON Batting.playerID=Master.playerID
+GROUP BY Batting.playerID
+HAVING sum(HR) >=600
+ORDER BY sum(HR) DESC"
+
+sqldf(query)
+```
+
+Finally, let's find all players with the first name Bob who averaged over $1 million in salary in their career, and list their last names:
+
+```{r}
+query<-"SELECT nameFirst,nameLast,avg(Salary)
+FROM Salaries INNER JOIN Master 
+ON Salaries.playerID=Master.playerID
+WHERE nameFirst='Bob'
+GROUP BY Salaries.playerID
+HAVING avg(Salary)>=1000000
+ORDER BY avg(Salary) DESC"
 
 sqldf(query)
 ```
